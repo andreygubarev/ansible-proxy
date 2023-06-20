@@ -1,0 +1,37 @@
+RunAsDaemon 0
+DataDirectory {{ tor_statedir }}
+Log notice stdout
+
+ExitRelay 0
+ExitPolicy reject *:*
+ExitPolicyRejectPrivate 1
+
+BridgeRelay 0
+
+AutomapHostsOnResolve 1
+CircuitBuildTimeout 60
+KeepalivePeriod 60
+NewCircuitPeriod 30
+NumEntryGuards 8
+
+SocksPort 127.0.0.1:{{ tor_socks_port }} IsolateDestAddr
+
+ControlPort 127.0.0.1:{{ tor_control_port }}
+CookieAuthentication 1
+
+{% if tor_bridges %}
+UseBridges 1
+{% else %}
+UseBridges 0
+{% endif %}
+UpdateBridgesFromAuthority 1
+ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
+
+{% for bridge in tor_bridges %}
+Bridge {{ bridge }}
+{% endfor %}
+
+{% if tor_hiddenservice_target %}
+HiddenServiceDir {{ tor_hiddenservice_dir }}
+HiddenServicePort {{ tor_hiddenservice_port }} {{ tor_hiddenservice_target }}
+{% endif %}
