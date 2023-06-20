@@ -1,5 +1,6 @@
 RunAsDaemon 0
-DataDirectory {{ tor_statedir }}
+DataDirectory {{ tor_path_statedir }}
+User debian-tor
 Log notice stdout
 
 ExitRelay 0
@@ -14,10 +15,11 @@ KeepalivePeriod 60
 NewCircuitPeriod 30
 NumEntryGuards 8
 
-SocksPort 127.0.0.1:{{ tor_socks_port }} IsolateDestAddr
-
-ControlPort 127.0.0.1:{{ tor_control_port }}
+ControlPort 127.0.0.1:{{ tor_port_control }}
 CookieAuthentication 1
+CookieAuthFileGroupReadable 1
+CookieAuthFile {{ tor_path_statedir }}/control.authcookie
+SocksPort 127.0.0.1:{{ tor_port_socks }} IsolateDestAddr
 
 {% if tor_bridges %}
 UseBridges 1
@@ -26,12 +28,11 @@ UseBridges 0
 {% endif %}
 UpdateBridgesFromAuthority 1
 ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
-
 {% for bridge in tor_bridges %}
 Bridge {{ bridge }}
 {% endfor %}
 
-{% if tor_hiddenservice_target %}
-HiddenServiceDir {{ tor_hiddenservice_dir }}
-HiddenServicePort {{ tor_hiddenservice_port }} {{ tor_hiddenservice_target }}
+{% if tor_hiddenservice %}
+HiddenServiceDir {{ tor_path_hiddenservice }}
+HiddenServicePort {{ tor_port_hiddenservice }} {{ tor_hiddenservice }}
 {% endif %}
