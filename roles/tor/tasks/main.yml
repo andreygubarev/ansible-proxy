@@ -12,22 +12,27 @@
 
 - name: Create Tor configuration directory
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ tor_path_confdir }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Create Tor state directory
+  ansible.builtin.file:
+    path: "{{ tor_path_statedir }}"
     state: directory
     mode: 0755
     owner: "{{ tor_user }}"
     group: "{{ tor_group }}"
-  loop:
-    - "{{ tor_path_confdir }}"
-    - "{{ tor_path_statedir }}"
 
 - name: Create Tor configuration file
   ansible.builtin.template:
     src: torrc.j2
     dest: "{{ tor_path_config }}"
     mode: 0644
-    owner: "{{ tor_user }}"
-    group: "{{ tor_group }}"
+    owner: root
+    group: root
   register: tor_state_config
 
 - name: Create Tor hidden service directory
