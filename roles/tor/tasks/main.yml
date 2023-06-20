@@ -42,7 +42,7 @@
     mode: 0644
   register: tor_state_systemd_service
 
-- name: Reload systemd daemon
+- name: Reload systemd daemon  # noqa: no-handler
   ansible.builtin.systemd:
     daemon_reload: true
   when: tor_state_systemd_service.changed
