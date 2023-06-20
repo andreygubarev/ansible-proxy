@@ -1,0 +1,26 @@
+namespace: andreygubarev
+name: proxy
+version: 1.0.0
+
+readme: README.md
+
+authors:
+  - Andrey Gubarev <andrey@andreygubarev.com> (andreygubarev.com)
+
+description: Ansible collection for setting up proxy servers
+license_file: LICENSE
+
+tags: []
+
+dependencies: {}
+
+repository: https://github.com/andreygubarev/ansible-proxy
+documentation: https://github.com/andreygubarev/ansible-proxy
+homepage: https://github.com/andreygubarev/ansible-proxy
+issues: https://github.com/andreygubarev/ansible-proxy/issues
+
+build_ignore:
+  - Makefile
+  - .venv
+  - .git
+  - .gitignore
