@@ -1,15 +1,16 @@
 ---
-tor_confdir: /etc/tor
-tor_statedir: /var/lib/tor
+tor_path_confdir: /etc/tor
+tor_path_statedir: /var/lib/tor
+tor_path_config: "{{ tor_path_confdir }}/torrc"
+tor_path_hiddenservice: "{{ tor_path_statedir }}/hidden_service"
 
 tor_user: debian-tor
 tor_group: debian-tor
 
-tor_config: "{{ tor_confdir }}/torrc"
-tor_socks_port: 9050
-tor_control_port: 9051
-tor_bridges: []
+tor_port_socks: 9050
+tor_port_control: 9051
+tor_port_hiddenservice: 80
 
-tor_hiddenservice_dir: "{{ tor_statedir }}/hidden_service"
-tor_hiddenservice_port: 80
-tor_hiddenservice_target:
+tor_bridges: []
+tor_hiddenservice:
+

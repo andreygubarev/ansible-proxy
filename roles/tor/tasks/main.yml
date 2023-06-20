@@ -15,30 +15,34 @@
     path: "{{ item }}"
     state: directory
     mode: 0755
+    owner: "{{ tor_user }}"
+    group: "{{ tor_group }}"
   loop:
-    - "{{ tor_confdir }}"
-    - "{{ tor_statedir }}"
+    - "{{ tor_path_confdir }}"
+    - "{{ tor_path_statedir }}"
 
 - name: Create Tor configuration file
   ansible.builtin.template:
     src: torrc.j2
-    dest: "{{ tor_config }}"
+    dest: "{{ tor_path_config }}"
     mode: 0644
+    owner: "{{ tor_user }}"
+    group: "{{ tor_group }}"
   register: tor_state_config
 
 - name: Create Tor hidden service directory
   ansible.builtin.file:
-    path: "{{ tor_hiddenservice_dir }}"
+    path: "{{ tor_path_hiddenservice }}"
     state: directory
     mode: 0700
     owner: "{{ tor_user }}"
     group: "{{ tor_group }}"
-  when: tor_hiddenservice_target
+  when: tor_hiddenservice
 
 - name: Create Tor systemd service file
   ansible.builtin.template:
     src: tor@default.service.j2
-    dest: /lib/systemd/system/tor@default.service
+    dest: /etc/systemd/system/tor@default.service
     mode: 0644
   register: tor_state_systemd_service
 
@@ -59,25 +63,25 @@
 
 - name: Wait for port
   ansible.builtin.wait_for:
-    port: 9050
+    port: "{{ tor_port_socks }}"
     state: started
     timeout: 30
 
 - name: Set fact for Tor hidden service hostname
-  when: tor_hiddenservice_target
+  when: tor_hiddenservice
   block:
     - name: Wait for hostname file
       ansible.builtin.wait_for:
-        path: "{{ tor_hiddenservice_dir }}/hostname"
+        path: "{{ tor_path_hiddenservice }}/hostname"
         state: present
         timeout: 30
 
     - name: Read hostname
-      ansible.builtin.command: cat "{{ tor_hiddenservice_dir }}/hostname"
+      ansible.builtin.command: cat "{{ tor_path_hiddenservice }}/hostname"
       register: tor_state_hostname
       changed_when: false
 
     - name: Set fact for Tor hidden service hostname
       ansible.builtin.set_fact:
         tor_hiddenservice_hostname: "{{ tor_state_hostname.stdout | trim }}"
-        tor_hiddenservice_port: "{{ tor_hiddenservice_port }}"
+        tor_hiddenservice_port: "{{ tor_port_hiddenservice }}"
