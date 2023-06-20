@@ -9,6 +9,7 @@
     name:
       - obfs4proxy
       - tor
+    install_recommends: false
 
 - name: Create Tor configuration directory
   ansible.builtin.file:
