@@ -80,3 +80,4 @@
     - name: Set fact for Tor hidden service hostname
       ansible.builtin.set_fact:
         tor_hiddenservice_hostname: "{{ tor_state_hostname.stdout | trim }}"
+        tor_hiddenservice_port: "{{ tor_hiddenservice_port }}"
