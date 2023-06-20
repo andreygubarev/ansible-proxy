@@ -1,10 +1,13 @@
 """Role testing files using testinfra."""
 
 
-def test_hosts_file(host):
-    """Validate /etc/hosts file."""
-    f = host.file("/etc/hosts")
+def test_tor_package_installed(host):
+    """Check if Tor package is installed."""
+    assert host.package("tor").is_installed
 
-    assert f.exists
-    assert f.user == "root"
-    assert f.group == "root"
+
+def test_tor_service_running_and_enabled(host):
+    """Check if Tor service is running and enabled."""
+    tor = host.service("tor@default.service")
+    assert tor.is_running
+    assert tor.is_enabled

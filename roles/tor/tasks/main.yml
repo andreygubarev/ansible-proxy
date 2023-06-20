@@ -1,1 +1,58 @@
 ---
+- name: APT cache update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - obfs4proxy
+      - tor
+
+- name: Create Tor configuration directory
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+  loop:
+    - "{{ tor_confdir }}"
+    - "{{ tor_statedir }}"
+
+- name: Create Tor configuration file
+  ansible.builtin.template:
+    src: torrc.j2
+    dest: "{{ tor_config }}"
+    mode: 0644
+  notify: Restart Tor service
+
+- name: Create Tor hidden service directory
+  ansible.builtin.file:
+    path: "{{ tor_hiddenservice_dir }}"
+    state: directory
+    mode: 0700
+    owner: "{{ tor_user }}"
+    group: "{{ tor_group }}"
+  when: tor_hiddenservice_target
+
+- name: Create Tor systemd service file
+  ansible.builtin.template:
+    src: tor@default.service.j2
+    dest: /lib/systemd/system/tor@default.service
+    mode: 0644
+  register: tor_systemd_service
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+  when: tor_systemd_service.changed
+
+- name: Enable Tor service
+  ansible.builtin.service:
+    name: tor@default.service
+    enabled: true
+
+- name: Start Tor service
+  ansible.builtin.service:
+    name: tor@default.service
+    state: started
