@@ -4,8 +4,10 @@ tor_statedir: /var/lib/tor
 
 tor_user: debian-tor
 tor_group: debian-tor
-tor_config: "{{ tor_confdir }}/torrc"
 
+tor_config: "{{ tor_confdir }}/torrc"
+tor_socks_port: 9050
+tor_control_port: 9051
 tor_bridges: []
 
 tor_hiddenservice_dir: "{{ tor_statedir }}/hidden_service"

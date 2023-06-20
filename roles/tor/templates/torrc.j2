@@ -14,9 +14,9 @@ KeepalivePeriod 60
 NewCircuitPeriod 30
 NumEntryGuards 8
 
-SocksPort 127.0.0.1:9050 IsolateDestAddr
+SocksPort 127.0.0.1:{{ tor_port }} IsolateDestAddr
 
-ControlPort 127.0.0.1:9051
+ControlPort 127.0.0.1:{{ tor_control_port }}
 CookieAuthentication 1
 
 {% if tor_bridges %}
