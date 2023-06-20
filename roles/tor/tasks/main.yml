@@ -24,7 +24,7 @@
     src: torrc.j2
     dest: "{{ tor_config }}"
     mode: 0644
-  notify: Restart Tor service
+  register: tor_state_config
 
 - name: Create Tor hidden service directory
   ansible.builtin.file:
@@ -40,12 +40,12 @@
     src: tor@default.service.j2
     dest: /lib/systemd/system/tor@default.service
     mode: 0644
-  register: tor_systemd_service
+  register: tor_state_systemd_service
 
 - name: Reload systemd daemon
   ansible.builtin.systemd:
     daemon_reload: true
-  when: tor_systemd_service.changed
+  when: tor_state_systemd_service.changed
 
 - name: Enable Tor service
   ansible.builtin.service:
@@ -55,4 +55,21 @@
 - name: Start Tor service
   ansible.builtin.service:
     name: tor@default.service
-    state: started
+    state: "{{ tor_state_config.changed | ternary('restarted', 'started') }}"
+
+- name: Set fact for Tor hidden service hostname
+  when: tor_hiddenservice_target
+  block:
+    - name: Wait for hostname
+      ansible.builtin.wait_for:
+        path: "{{ tor_hiddenservice_dir }}/hostname"
+        state: present
+        timeout: 30
+
+    - name: Read hostname
+      ansible.builtin.command: cat "{{ tor_hiddenservice_dir }}/hostname"
+      register: tor_state_hostname
+
+    - name: Set fact for Tor hidden service hostname
+      ansible.builtin.set_fact:
+        tor_hiddenservice_hostname: "{{ tor_state_hostname.stdout | trim }}"

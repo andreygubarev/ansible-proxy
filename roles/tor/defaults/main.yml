@@ -4,7 +4,6 @@ tor_statedir: /var/lib/tor
 
 tor_user: debian-tor
 tor_group: debian-tor
-
 tor_config: "{{ tor_confdir }}/torrc"
 
 tor_bridges: []
