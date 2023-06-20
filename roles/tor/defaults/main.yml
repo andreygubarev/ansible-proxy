@@ -13,4 +13,3 @@ tor_port_hiddenservice: 80
 
 tor_bridges: []
 tor_hiddenservice:
-
