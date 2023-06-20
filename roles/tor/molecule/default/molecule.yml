@@ -16,7 +16,7 @@ provisioner:
     host_vars:
       debian-bullseye-arm64:
         tor_hiddenservice: localhost:8080
-        tor_path_confdir: /mnt/local/tor/config
-        tor_path_statedir: /mnt/local/tor/state
+        tor_path_confdir: /mnt/local/tor
+        tor_path_statedir: /mnt/local/tor/run
 verifier:
   name: testinfra
