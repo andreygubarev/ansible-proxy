@@ -19,7 +19,7 @@
     mode: '0644'
   register: socat_state_service
 
-- name: Reload daemon
+- name: Reload daemon  # noqa: no-handler
   ansible.builtin.systemd:
     daemon_reload: true
   when: socat_state_service.changed
@@ -33,4 +33,3 @@
   ansible.builtin.service:
     name: "{{ socat_name }}.service"
     state: "{{ socat_state_service.changed | ternary('started', 'restarted') }}"
-
