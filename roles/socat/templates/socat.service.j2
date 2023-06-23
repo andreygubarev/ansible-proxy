@@ -3,11 +3,9 @@ Description=Socat Service
 After=network.target
 
 [Service]
-Environment=SOCAT_LISTEN={{ socat_listen }}
-Environment=SOCAT_REMOTE={{ socat_remote }}
-Environment=SOCKS_PROXY={{ socat_socks_proto }}:{{ socat_socks_host }}
-Environment=SOCKS_PORT=socksport={{ socat_socks_port }}
-ExecStart=/usr/bin/socat ${SOCAT_LISTEN} ${SOCKS_PROXY}:${SOCAT_REMOTE},${SOCKS_PORT}
+Environment=SOCAT_BIND={{ socat_bind }}
+Environment=SOCAT_CONNECT={{ socat_connect }}
+ExecStart=/usr/bin/socat ${SOCAT_BIND} ${SOCAT_CONNECT}
 ExecStop=/bin/kill -s QUIT ${MAINPID}
 Restart=always
 User=root
