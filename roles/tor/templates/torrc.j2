@@ -26,7 +26,7 @@ UseBridges 1
 {% else %}
 UseBridges 0
 {% endif %}
-UpdateBridgesFromAuthority 1
+UpdateBridgesFromAuthority 0
 ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy
 {% for bridge in tor_bridges %}
 Bridge {{ bridge }}
