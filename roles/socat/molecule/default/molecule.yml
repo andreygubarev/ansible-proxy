@@ -10,5 +10,9 @@ platforms:
     image_checksum: sha512:https://cloud.debian.org/images/cloud/bullseye/latest/SHA512SUMS
 provisioner:
   name: ansible
+  inventory:
+    host_vars:
+      debian-bullseye-arm64:
+        socat_remote: example.com:80
 verifier:
   name: testinfra

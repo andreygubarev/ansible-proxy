@@ -1,1 +1,36 @@
 ---
+- name: APT cache update
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - socat
+    install_recommends: false
+
+- name: Create service
+  ansible.builtin.template:
+    src: socat.service.j2
+    dest: "/etc/systemd/system/{{ socat_name }}.service"
+    owner: root
+    group: root
+    mode: '0644'
+  register: socat_state_service
+
+- name: Reload daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+  when: socat_state_service.changed
+
+- name: Enable service
+  ansible.builtin.service:
+    name: "{{ socat_name }}.service"
+    enabled: true
+
+- name: Start service
+  ansible.builtin.service:
+    name: "{{ socat_name }}.service"
+    state: "{{ socat_state_service.changed | ternary('started', 'restarted') }}"
+

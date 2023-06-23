@@ -1,1 +1,7 @@
 ---
+socat_name: socat
+
+socat_listen: TCP-L:18514,fork,reuseaddr
+socat_remote:
+socat_socks_proxy: SOCKS4A:127.0.0.1
+socat_socks_port: 9050
