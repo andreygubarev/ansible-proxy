@@ -13,6 +13,13 @@ provisioner:
   inventory:
     host_vars:
       debian-bullseye-arm64:
-        socat_remote: example.com:80
+        socat_name: socat@proxy
+        socat_bind_type: tcp4-listen
+        socat_bind_interface: 8000
+        socat_bind_opts: fork,reuseaddr
+        socat_connect_type: socks4a:127.0.0.1
+        socat_connect_interface: example.com:80
+        socat_connect_opts: socksport=1080
+
 verifier:
   name: testinfra

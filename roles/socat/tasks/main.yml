@@ -6,8 +6,7 @@
 
 - name: Install packages
   ansible.builtin.apt:
-    name:
-      - socat
+    name: socat
     install_recommends: false
 
 - name: Create service
@@ -32,4 +31,4 @@
 - name: Start service
   ansible.builtin.systemd:
     name: "{{ socat_name }}.service"
-    state: "{{ socat_state_service.changed | ternary('started', 'restarted') }}"
+    state: "{{ socat_state_service.changed | ternary('restarted', 'started') }}"

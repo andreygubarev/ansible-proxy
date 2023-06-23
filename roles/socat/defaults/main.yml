@@ -1,8 +1,20 @@
 ---
 socat_name: socat
 
-socat_listen: TCP-L:18514,fork,reuseaddr
-socat_remote:
-socat_socks_proto: SOCKS4A
-socat_socks_host: 127.0.0.1
-socat_socks_port: 9050
+socat_bind_type:
+socat_bind_interface:
+socat_bind_opts:
+socat_bind: >-
+  {{ socat_bind_type }}:{{ socat_bind_interface }}
+  {%- if socat_bind_opts -%}
+  ,{{ socat_bind_opts }}
+  {%- endif -%}
+
+socat_connect_type:
+socat_connect_interface:
+socat_connect_opts:
+socat_connect: >-
+  {{ socat_connect_type }}:{{ socat_connect_interface }}
+  {%- if socat_connect_opts -%}
+  ,{{ socat_connect_opts }}
+  {%- endif -%}
