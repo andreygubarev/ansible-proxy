@@ -5,8 +5,8 @@ After=network.target
 [Service]
 Environment=SOCAT_LISTEN={{ socat_listen }}
 Environment=SOCAT_REMOTE={{ socat_remote }}
-Environment=SOCKS_PROXY={{ socat_socks_proxy }}
-Environment=SOCKS_PORT={{ socat_socks_port }}
+Environment=SOCKS_PROXY={{ socat_socks_proto }}:{{ socat_socks_host }}
+Environment=SOCKS_PORT=socksport={{ socat_socks_port }}
 ExecStart=/usr/bin/socat ${SOCAT_LISTEN} ${SOCKS_PROXY}:${SOCAT_REMOTE},${SOCKS_PORT}
 ExecStop=/bin/kill -s QUIT ${MAINPID}
 Restart=always
